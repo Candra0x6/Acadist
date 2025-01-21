@@ -13,7 +13,7 @@ services:
     build:
       context: .
       dockerfile: backend.dockerfile
-    image: itzcrazykns1337/acadist-backend:main
+    image: Candra0x6/acadist-backend:main
     environment:
       - SEARXNG_API_URL=http://searxng:8080
     depends_on:
@@ -37,7 +37,7 @@ services:
       args:
         - NEXT_PUBLIC_API_URL=http://127.0.0.1:3001/api
         - NEXT_PUBLIC_WS_URL=ws://127.0.0.1:3001
-    image: itzcrazykns1337/acadist-frontend:main
+    image: Candra0x6/acadist-frontend:main
     depends_on:
       - acadist-backend
     ports:
