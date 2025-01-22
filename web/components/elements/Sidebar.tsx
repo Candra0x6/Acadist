@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   AudioWaveform,
   Calendar,
@@ -10,7 +10,7 @@ import {
   Plus,
   Search,
   Settings,
-} from "lucide-react";
+} from 'lucide-react';
 
 import {
   Sidebar,
@@ -19,11 +19,13 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
-} from "../ui/sidebar";
+  SidebarTrigger,
+  useMultiSidebar,
+} from '@/components/ui/multisidebar';
 
 import {
   DropdownMenu,
@@ -33,34 +35,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import React from "react";
+} from '../ui/dropdown-menu';
+import React from 'react';
+import { PiCaretDoubleRightBold } from 'react-icons/pi';
 
 // Menu items.
 const items = [
   {
-    title: "Home",
-    url: "#",
+    title: 'Home',
+    url: '#',
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
+    title: 'Inbox',
+    url: '#',
     icon: Inbox,
   },
   {
-    title: "Calendar",
-    url: "#",
+    title: 'Calendar',
+    url: '#',
     icon: Calendar,
   },
   {
-    title: "Search",
-    url: "#",
+    title: 'Search',
+    url: '#',
     icon: Search,
   },
   {
-    title: "Settings",
-    url: "#",
+    title: 'Settings',
+    url: '#',
     icon: Settings,
   },
 ];
@@ -68,34 +71,37 @@ const items = [
 const data = {
   teams: [
     {
-      name: "Acme Inc",
+      name: 'Acme Inc',
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: 'Enterprise',
     },
     {
-      name: "Acme Corp.",
+      name: 'Acme Corp.',
       logo: AudioWaveform,
-      plan: "Startup",
+      plan: 'Startup',
     },
     {
-      name: "Evil Corp.",
+      name: 'Evil Corp.',
       logo: Command,
-      plan: "Free",
+      plan: 'Free',
     },
   ],
 };
 
 export function AppSidebar() {
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0]);
-  const { isMobile } = useSidebar();
-
   return (
-    <Sidebar className="border-muted-foreground">
+    <Sidebar side="left" className="border-muted-foreground">
       <SidebarContent className="bg-secondary p-2 h-full w-full ">
         <SidebarGroup className=" h-full">
-          <SidebarGroupLabel className="font-bold text-2xl text-foreground">
-            Dashboard
-          </SidebarGroupLabel>
+          <SidebarHeader className="flex items-center justify-between">
+            <h1 className="font-bold text-xl text-foreground w-full">
+              Dashboard
+            </h1>
+            <SidebarTrigger side="left" className={`bg-secondary p-4`}>
+              <PiCaretDoubleRightBold className="w-20 h-20 text-2xl rotate-180" />
+            </SidebarTrigger>
+          </SidebarHeader>
           <SidebarGroupContent className="h-full">
             <SidebarMenu className="mt-5">
               {items.map((item) => (
@@ -140,7 +146,6 @@ export function AppSidebar() {
                 <DropdownMenuContent
                   className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-secondary border-muted-foreground shadow-xl"
                   align="start"
-                  side={isMobile ? "bottom" : "right"}
                   sideOffset={4}
                 >
                   <DropdownMenuLabel className="text-xs text-muted-foreground">
