@@ -80,7 +80,7 @@ export default function Home() {
         <div className="py-20 flex flex-col items-center">
           <div className="text-center">
             <h1 className="text-5xl font-bold leading-snug">
-              Accelerate your research
+              Accelerate yr research
               <br /> process in weeks{", "}
               <span className="before:block before:absolute before:-inset-1 before:skew-y-1 before:bg-card relative inline-block">
                 <span className="relative text-foreground">not in mounts.</span>
@@ -93,7 +93,7 @@ export default function Home() {
             </p>
           </div>
           <Button className="mt-8 px-7 py-6 border-2 bg-primary hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-primary/80 dark:focus:ring-primary shadow-lg shadow-primary/50 dark:shadow-lg dark:shadow-primary/80 font-medium rounded-lg text-sm  text-center me-2 mb-2 ">
-            Lets Writing <span className="text-white/80">- for free</span>
+            Lets Wrig <span className="text-white/80">- for free</span>
           </Button>
         </div>
         <div className="bg-[#E9E4DA] w-full rounded-[50px]">
@@ -111,7 +111,7 @@ export default function Home() {
           <h1 className="text-primary text-xl">SIMPLE WORKS</h1>
           <h1 className="font-bold text-5xl">Streamline Your Research</h1>
           <p className="text-muted-foreground text-xl">
-            Quickly create well-organized research papers with ease.
+            Quickly create well-organized papers with ease.
           </p>
         </div>
 
