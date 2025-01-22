@@ -1,12 +1,13 @@
-"use client";
-import { BiSolidZap } from "react-icons/bi";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+'use client';
+import { BiSolidZap } from 'react-icons/bi';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   createEditor,
   Descendant,
   NodeEntry,
   Range as SlateRange,
-} from "slate";
+  Transforms,
+} from 'slate';
 import {
   Slate,
   Editable,
@@ -14,11 +15,11 @@ import {
   RenderElementProps,
   RenderLeafProps,
   ReactEditor,
-} from "slate-react";
-import { withHistory } from "slate-history";
-import isHotkey from "is-hotkey";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+} from 'slate-react';
+import { withHistory } from 'slate-history';
+import isHotkey from 'is-hotkey';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -26,7 +27,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Bold,
   Italic,
@@ -49,37 +50,41 @@ import {
   Search,
   ArrowBigDown,
   ArrowDown,
-} from "lucide-react";
-import { Element } from "./Element";
-import { Leaf } from "./Leaf";
+} from 'lucide-react';
+import { Element } from './Element';
+import { Leaf } from './Leaf';
 import {
   COLORS,
   FONT_SIZES,
   HOTKEYS,
   INITIAL_EDITOR_VALUE,
-} from "../constants/editor.contants";
-import { toggleMark } from "../utils/editor";
-import { CustomEditor, CustomElement } from "../types/editor.types";
-import { SearchToolbar } from "./search/SearchToolbar";
-import { Toolbar } from "./Toolbar";
-import { MarkButton } from "./button/mark-button";
-import { BlockButton } from "./button/block-button";
-import { TableControls } from "./table/TableControls";
-import BorderControls from "./border/BorderControls";
-import { withTables } from "../plugins/withTables";
+} from '../constants/editor.contants';
+import { toggleMark } from '../utils/editor';
+import { CustomEditor, CustomElement } from '../types/editor.types';
+import { SearchToolbar } from './search/SearchToolbar';
+import { Toolbar } from './Toolbar';
+import { MarkButton } from './button/mark-button';
+import { BlockButton } from './button/block-button';
+import { TableControls } from './table/TableControls';
+import BorderControls from './border/BorderControls';
+import { withTables } from '../plugins/withTables';
+import { saveAs } from 'file-saver';
 
-import { useTable } from "@/hooks/useTable";
-import { useSearch } from "@/hooks/useSearch";
-import { ErrorBoundary } from "react-error-boundary";
+import { useTable } from '@/hooks/useTable';
+import { useSearch } from '@/hooks/useSearch';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import { createEmptyPage, withPageBreaks } from "../plugins/withPageBreaks";
-import WithCustomDelete from "../plugins/withCustomDeletes";
-import WithCustomInsertBreak from "../plugins/withCustomInsertBreak";
-import withCustomNormalize from "../plugins/withCustomNormalize";
-import defaultSelection, { getTextRanges } from "../utils/page.utils";
-import intialState, { highlightColors } from "../constants/page.constants";
-import { HeadingButton } from "./button/heading-button";
-import { TbDropletDown } from "react-icons/tb";
+import { createEmptyPage, withPageBreaks } from '../plugins/withPageBreaks';
+import WithCustomDelete from '../plugins/withCustomDeletes';
+import WithCustomInsertBreak from '../plugins/withCustomInsertBreak';
+import withCustomNormalize from '../plugins/withCustomNormalize';
+import defaultSelection, { getTextRanges } from '../utils/page.utils';
+import intialState, { highlightColors } from '../constants/page.constants';
+import { HeadingButton } from './button/heading-button';
+import { TbDropletDown } from 'react-icons/tb';
+import convertToDoc from '@/utils/convert-docs';
+import { SidebarTrigger, useMultiSidebar } from '@/components/ui/multisidebar';
+import { PiCaretDoubleRightBold } from 'react-icons/pi';
 interface TextEditorState {
   value: Descendant[];
   search: string | undefined;
@@ -91,17 +96,17 @@ export const RichTextEditor: React.FC = () => {
     () =>
       WithCustomDelete(
         WithCustomInsertBreak(
-          withCustomNormalize(withHistory(withReact(createEditor())))
-        )
+          withCustomNormalize(withHistory(withReact(createEditor()))),
+        ),
       ),
-    []
+    [],
   );
   const [state, setState] = useState<TextEditorState>({
     value: [...intialState],
-    search: "",
+    search: '',
     lastBlurSelection: defaultSelection,
   });
-// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'entry' implicitly has an 'any' type.
+  // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'entry' implicitly has an 'any' type.
   const handleDecorate = ([node, path]: NodeEntry<Node>) => {
     const ranges: Range[] = [];
     // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
@@ -125,13 +130,13 @@ export const RichTextEditor: React.FC = () => {
 
   const handleRenderLeaf: any = useCallback(
     (props: RenderLeafProps) => renderLeaf(props),
-    [state.search]
+    [state.search],
   );
 
   const decorate = useCallback(
     // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'entry' implicitly has an 'any' type.
     (entry: NodeEntry) => handleDecorate(entry),
-    [state.search]
+    [state.search],
   );
 
   useEffect(() => {
@@ -140,14 +145,14 @@ export const RichTextEditor: React.FC = () => {
 
   const handleOnPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const text = e.clipboardData?.getData("text");
+    const text = e.clipboardData?.getData('text');
     console.log(
       text,
-      "YES, this text was pasted but i need to insert the page break so i disabled it for now, WORK IN PROGRESS"
+      'YES, this text was pasted but i need to insert the page break so i disabled it for now, WORK IN PROGRESS',
     );
-    // if(text){
-    //   Transforms.insertText(editor,text)
-    // }
+    if (text) {
+      Transforms.insertText(editor, text);
+    }
   };
 
   // Custom hooks
@@ -177,11 +182,11 @@ export const RichTextEditor: React.FC = () => {
   // Callbacks for rendering elements and leaves
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
-    []
+    [],
   );
   const renderLeaf = useCallback(
     (props: RenderLeafProps) => <Leaf {...props} />,
-    []
+    [],
   );
 
   // History handlers
@@ -197,7 +202,7 @@ export const RichTextEditor: React.FC = () => {
 
   // Font size handlers
   const handleFontSizeChange = (size: string) => {
-    editor.addMark("fontSize", size);
+    editor.addMark('fontSize', size);
   };
 
   const handleIncreaseFontSize = (event: React.MouseEvent) => {
@@ -206,7 +211,7 @@ export const RichTextEditor: React.FC = () => {
     const marks = editor.marks();
     const currentSize = marks?.fontSize ? parseInt(marks.fontSize) : 12;
     const newSize = Math.min(currentSize + 2, 72).toString();
-    editor.addMark("fontSize", newSize);
+    editor.addMark('fontSize', newSize);
   };
 
   const handleDecreaseFontSize = (event: React.MouseEvent) => {
@@ -215,12 +220,12 @@ export const RichTextEditor: React.FC = () => {
     const marks = editor.marks();
     const currentSize = marks?.fontSize ? parseInt(marks.fontSize) : 12;
     const newSize = Math.max(currentSize - 2, 8).toString();
-    editor.addMark("fontSize", newSize);
+    editor.addMark('fontSize', newSize);
   };
 
   // Color handler
   const handleColorChange = (color: string) => {
-    editor.addMark("color", color);
+    editor.addMark('color', color);
   };
 
   const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -230,20 +235,20 @@ export const RichTextEditor: React.FC = () => {
         const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS];
 
         switch (mark) {
-          case "undo":
+          case 'undo':
             editor.undo();
             break;
-          case "redo":
+          case 'redo':
             editor.redo();
             break;
-          case "find":
-          case "replace":
+          case 'find':
+          case 'replace':
             setShowSearch(true);
             break;
-          case "findNext":
+          case 'findNext':
             findNext();
             break;
-          case "findPrevious":
+          case 'findPrevious':
             findPrevious();
             break;
           default:
@@ -252,6 +257,12 @@ export const RichTextEditor: React.FC = () => {
       }
     }
   };
+  const downloadAsDoc = async () => {
+    const doc = await convertToDoc(editor);
+    saveAs(doc, 'YO THIS IS YOUR FILE.docx');
+  };
+  const { leftSidebar } = useMultiSidebar();
+  console.log(leftSidebar);
 
   return (
     <ErrorBoundary
@@ -263,7 +274,7 @@ export const RichTextEditor: React.FC = () => {
         setState(...state, { value: [...intialState] });
       }}
     >
-      <div className="mx-auto max-h-screen py-4">
+      <div className=" max-h-screen py-4 flex transition-all duration-300  justify-center">
         <Slate
           editor={editor as CustomEditor}
           initialValue={state.value}
@@ -271,7 +282,19 @@ export const RichTextEditor: React.FC = () => {
           value={state.value}
           onChange={(value) => setState({ ...state, value })}
         >
-          <Card className="rounded-lg shadow-sm border-0 bg-transparant h-screen">
+          <SidebarTrigger
+            side="left"
+            className={`bg-secondary p-5 mr-10 transition-all duration-300 ${
+              leftSidebar.open
+                ? 'scale-0 opacity-0 absolute' // Menghilangkan elemen dan tidak mengambil space
+                : 'scale-100 opacity-100 static' // Menampilkan elemen kembali
+            }`}
+          >
+            <PiCaretDoubleRightBold className="w-20 h-20 text-2xl" />
+          </SidebarTrigger>
+          <Card
+            className={`transition-all duration-300 rounded-lg shadow-sm border-0 bg-transparant h-screen ${leftSidebar.open ? 'w-full flex-grow' : 'w-fit'}`}
+          >
             {/* Search Bar */}
             <div className="max-w-8xl mx-auto">
               <div className="w-full"></div>
@@ -292,6 +315,7 @@ export const RichTextEditor: React.FC = () => {
               )}
 
               {/* Toolbar */}
+
               <Toolbar>
                 {/* Undo/Redo Group */}
                 <div className="flex flex-col gap-1 p-5 border-r border-muted-foreground">
@@ -400,9 +424,9 @@ export const RichTextEditor: React.FC = () => {
                                   style={{
                                     backgroundColor: color.value,
                                     border:
-                                      color.value === "inherit"
-                                        ? "1px solid #e2e8f0"
-                                        : "none",
+                                      color.value === 'inherit'
+                                        ? '1px solid #e2e8f0'
+                                        : 'none',
                                   }}
                                 />
                                 {color.name}
@@ -509,7 +533,9 @@ export const RichTextEditor: React.FC = () => {
                   <h1>Editing Group</h1>
                 </div>
                 <div className="flex items-center justify-center px-6 ">
-                  <BiSolidZap className="text-xl" />
+                  <SidebarTrigger side="right">
+                    <BiSolidZap className="w-8 h-8" />
+                  </SidebarTrigger>
                 </div>
               </Toolbar>
             </div>
