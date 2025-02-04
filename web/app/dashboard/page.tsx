@@ -1,5 +1,5 @@
-import RichTextEditor from "@/components/editor/elements/TextEditor";
-import React from "react";
+import RichTextEditor from '@/components/editor/elements/TextEditor';
+import React from 'react';
 
 const DashboardPage = () => {
   return (

@@ -36,7 +36,7 @@ import type { z } from 'zod';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const SidebarChatWrapper: React.FunctionComponent = () => {
-  const { sendMessage, messages, loading, messageAppeared } =
+  const { sendMessage, messages, messageAppeared, loading } =
     useWebSocketMessageHandler();
 
   const onSubmit: SubmitHandler<z.infer<typeof chatInputFormSchema>> = (
@@ -44,6 +44,7 @@ export const SidebarChatWrapper: React.FunctionComponent = () => {
   ) => {
     sendMessage(data.message);
   };
+  console.log(messages);
 
   return (
     <Sidebar side="right" className="border-muted-foreground">

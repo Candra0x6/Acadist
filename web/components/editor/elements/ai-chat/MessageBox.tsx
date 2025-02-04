@@ -1,8 +1,8 @@
 import { Message } from '@/types/slate';
 import * as React from 'react';
 import Markdown from 'markdown-to-jsx';
-import { cn } from '@/lib/utils copy';
 import MessageSources from './SourceMessage';
+
 interface IMessageBoxProps {
   message: Message;
   messageIndex: number;
@@ -26,6 +26,7 @@ const MessageBox: React.FunctionComponent<IMessageBoxProps> = ({
         message.content.replace(
           regex,
           (_, number) =>
+            // @ts-expect-error - TS is not recognizing the href attribute
             `<a href="${message.sources?.[number - 1]?.metadata?.url}" target="_blank" className="bg-transparent px-1 rounded ml-1 no-underline text-xs text-blue-700/70 dark:text-white/70 relative">${number}</a>`,
         ),
       );
@@ -33,6 +34,9 @@ const MessageBox: React.FunctionComponent<IMessageBoxProps> = ({
 
     setParsedMessage(message.content);
   }, [message.content, message.sources, message.role]);
+  const handleTextSelect = (selectedText: string) => {
+    console.log(selectedText);
+  };
   console.log(message);
   return (
     <div className="">
@@ -40,7 +44,7 @@ const MessageBox: React.FunctionComponent<IMessageBoxProps> = ({
         message.sources &&
         message.sources.length > 0 && (
           <div
-            className="flex flex-col items-start text-foreground  rounded-md w-full"
+            className="flex flex-col items-start text-foreground  rounded-md w-full relative"
             key={messageIndex}
           >
             <Markdown
@@ -68,6 +72,8 @@ const MessageBox: React.FunctionComponent<IMessageBoxProps> = ({
             </Markdown>
             <div className="w-full my-7">
               {message.sources && message.sources.length > 0 && (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 <MessageSources sources={message.sources} />
               )}
             </div>

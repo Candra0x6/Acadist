@@ -39,7 +39,10 @@ services:
         - NEXT_PUBLIC_WS_URL=ws://127.0.0.1:3001
     volumes:
       - ./web:/home/acadist/web
+      - /home/acadist/web/node_modules
     image: Candra0x6/acadist-frontend:main
+    environment:
+      - NEXT_WEBPACK_USEPOLLING=1
     depends_on:
       - acadist-backend
     ports:

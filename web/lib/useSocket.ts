@@ -30,10 +30,12 @@ export const useSocket = (
         let embeddingModelProvider = localStorage.getItem(
           'embeddingModelProvider',
         );
+        // eslint-disable-next-line prefer-const
         let openAIBaseURL =
           chatModelProvider === 'custom_openai'
             ? localStorage.getItem('openAIBaseURL')
             : null;
+        // eslint-disable-next-line prefer-const
         let openAIPIKey =
           chatModelProvider === 'custom_openai'
             ? localStorage.getItem('openAIApiKey')

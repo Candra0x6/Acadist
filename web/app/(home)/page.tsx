@@ -1,9 +1,9 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import desi from "@/public/assets/images/desi.png";
-import Image from "next/image";
-import arrowIcon from "@/public/assets/icon/arrow.svg";
-import { useState } from "react";
+'use client';
+import { Button } from '@/components/ui/button';
+import desi from '@/public/assets/images/desi.png';
+import Image from 'next/image';
+import arrowIcon from '@/public/assets/icon/arrow.svg';
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -11,34 +11,34 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { FaCheck, FaChevronRight } from "react-icons/fa6";
-import { FaAngleRight } from "react-icons/fa6";
+} from '@/components/ui/card';
+import { FaCheck, FaChevronRight } from 'react-icons/fa6';
+import { FaAngleRight } from 'react-icons/fa6';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from '@/components/ui/accordion';
 
 const FAQ_LIST = [
   {
-    question: "What is this app?",
+    question: 'What is this app?',
     answer:
-      "This app is a research paper writing tool that helps you write research papers quickly and easily.",
+      'This app is a research paper writing tool that helps you write research papers quickly and easily.',
   },
   {
-    question: "How much does it cost?",
-    answer: "This app is free to use.",
+    question: 'How much does it cost?',
+    answer: 'This app is free to use.',
   },
   {
-    question: "How do I get started?",
+    question: 'How do I get started?',
     answer:
-      "To get started, simply sign up for an account and start writing your research papers.",
+      'To get started, simply sign up for an account and start writing your research papers.',
   },
   {
-    question: "How do I get help?",
-    answer: "If you need help, you can contact our support team at",
+    question: 'How do I get help?',
+    answer: 'If you need help, you can contact our support team at',
   },
 ];
 
@@ -48,23 +48,23 @@ export default function Home() {
   const previews = [
     {
       id: 1,
-      title: "AI Assistens",
-      video: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+      title: 'AI Assistens',
+      video: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ',
     },
     {
       id: 2,
-      title: "Auto Summarize",
-      video: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+      title: 'Auto Summarize',
+      video: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ',
     },
     {
       id: 3,
-      title: "Math Paper",
-      video: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+      title: 'Math Paper',
+      video: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ',
     },
     {
       id: 4,
-      title: "Many More",
-      video: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+      title: 'Many More',
+      video: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ',
     },
   ];
 
@@ -80,14 +80,16 @@ export default function Home() {
         <div className="py-20 flex flex-col items-center">
           <div className="text-center">
             <h1 className="text-5xl font-bold leading-snug">
-              Accelerate yr research
-              <br /> process in weeks{", "}
+              Accelerate your searchy nknmokknk
+              <br /> process in a weeks{', '}
               <span className="before:block before:absolute before:-inset-1 before:skew-y-1 before:bg-card relative inline-block">
-                <span className="relative text-foreground">not in mounts.</span>
+                <span className="relative text-foreground">
+                  not in mountsss.
+                </span>
               </span>
             </h1>
             <p className="text-xl mt-4 text-muted-foreground">
-              Turn your research ideas into papers quickly with tools that{" "}
+              Turn your research ideas into papers quickly with tools that{' '}
               <br />
               simplify the process
             </p>
@@ -119,7 +121,7 @@ export default function Home() {
           <div className="w-full h-[300px] flex flex-col bg-card rounded-xl p-10 gap-y-2">
             <h1 className="text-8xl mb-5">✍️</h1>
             <h2 className="text-foreground text-2xl font-semibold">
-              Write your Idea with Easly{" "}
+              Write your Idea with Easly{' '}
             </h2>
             <p className="text-md text-muted-foreground">Math Paper</p>
           </div>
@@ -133,7 +135,7 @@ export default function Home() {
           <div className="w-full h-[300px] flex flex-col bg-card rounded-xl p-10 gap-y-2">
             <h1 className="text-8xl mb-5">✍️</h1>
             <h2 className="text-foreground text-2xl font-semibold">
-              Write your Idea with Easly{" "}
+              Write your Idea with Easly{' '}
             </h2>
             <p className="text-md text-muted-foreground">Math Paper</p>
           </div>
@@ -147,7 +149,7 @@ export default function Home() {
           <div className="w-full h-[300px] flex flex-col bg-card rounded-xl p-10 gap-y-2">
             <h1 className="text-8xl mb-5">✍️</h1>
             <h2 className="text-foreground text-2xl font-semibold">
-              Write your Idea with Easly{" "}
+              Write your Idea with Easly{' '}
             </h2>
             <p className="text-md text-muted-foreground">Math Paper</p>
           </div>
@@ -168,7 +170,7 @@ export default function Home() {
               key={i}
               onClick={() => handlePreviewClick(i)}
               className={`w-full flex flex-col cursor-pointer mb-10 ${
-                selectedPreviewIndex == i ? "bg-card" : ""
+                selectedPreviewIndex == i ? 'bg-card' : ''
               } rounded-xl p-2 gap-y-2 text-center`}
             >
               <h1 className="font-bold">{item.title}</h1>

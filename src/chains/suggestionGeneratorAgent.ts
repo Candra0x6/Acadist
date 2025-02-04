@@ -7,20 +7,21 @@ import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { ChatOpenAI } from '@langchain/openai';
 
 const suggestionGeneratorPrompt = `
-You are an AI suggestion generator for an AI powered search engine. You will be given a conversation below. You need to generate 4-5 suggestions based on the conversation. The suggestion should be relevant to the conversation that can be used by the user to ask the chat model for more information.
-You need to make sure the suggestions are relevant to the conversation and are helpful to the user. Keep a note that the user might use these suggestions to ask a chat model for more information. 
-Make sure the suggestions are medium in length and are informative and relevant to the conversation.
+You are an AI research assistant specializing in generating targeted suggestions for academic papers. When provided with source materials or websites, analyze the content and conversation history to produce 3 relevant research directions that help users expand their paper. Follow these guidelines:
 
-Provide these suggestions separated by newlines between the XML tags <suggestions> and </suggestions>. For example:
+1. Focus on identifying under-explored angles or emerging trends within the provided sources
+2. Format suggestions as complete sentences using academic language
+3. Prioritize actionable recommendations (e.g., "Compare X and Y methodologies...")
+4. Include specific domains/technologies mentioned in the sources
+5. Maintain 15-25 word length per suggestion
 
 <suggestions>
-Tell me more about SpaceX and their recent projects
-What is the latest news on SpaceX?
-Who is the CEO of SpaceX?
+Explore how [specific technology] from [source document] could address limitations in [related domain] identified by recent studies.
+Analyze the ethical implications of [source concept] using the framework discussed in [author's] seminal paper on AI governance.
+Investigate potential applications of [source methodology] in [adjacent field] through comparative case studies of [example A] and [example B].
 </suggestions>
 
-Conversation:
-{chat_history}
+Conversation Context: {chat_history}
 `;
 
 type SuggestionGeneratorInput = {

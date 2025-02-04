@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { BiSolidZap } from 'react-icons/bi';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -50,6 +51,7 @@ import {
   Search,
   ArrowBigDown,
   ArrowDown,
+  Settings2,
 } from 'lucide-react';
 import { Element } from './Element';
 import { Leaf } from './Leaf';
@@ -68,7 +70,6 @@ import { BlockButton } from './button/block-button';
 import { TableControls } from './table/TableControls';
 import BorderControls from './border/BorderControls';
 import { withTables } from '../plugins/withTables';
-import { saveAs } from 'file-saver';
 
 import { useTable } from '@/hooks/useTable';
 import { useSearch } from '@/hooks/useSearch';
@@ -85,6 +86,8 @@ import { TbDropletDown } from 'react-icons/tb';
 import convertToDoc from '@/utils/convert-docs';
 import { SidebarTrigger, useMultiSidebar } from '@/components/ui/multisidebar';
 import { PiCaretDoubleRightBold } from 'react-icons/pi';
+import { Transform } from 'stream';
+import SettingsDialog from '@/components/elements/SettingsDialog';
 interface TextEditorState {
   value: Descendant[];
   search: string | undefined;
@@ -92,6 +95,8 @@ interface TextEditorState {
 }
 export const RichTextEditor: React.FC = () => {
   // Initialize editor with plugins
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   const editor = useMemo(
     () =>
       WithCustomDelete(
@@ -106,6 +111,8 @@ export const RichTextEditor: React.FC = () => {
     search: '',
     lastBlurSelection: defaultSelection,
   });
+  const cursorPosition = editor.selection ? editor.selection.anchor.offset : 0;
+
   // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'entry' implicitly has an 'any' type.
   const handleDecorate = ([node, path]: NodeEntry<Node>) => {
     const ranges: Range[] = [];
@@ -130,12 +137,14 @@ export const RichTextEditor: React.FC = () => {
 
   const handleRenderLeaf: any = useCallback(
     (props: RenderLeafProps) => renderLeaf(props),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [state.search],
   );
 
   const decorate = useCallback(
     // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'entry' implicitly has an 'any' type.
     (entry: NodeEntry) => handleDecorate(entry),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [state.search],
   );
 
@@ -257,12 +266,28 @@ export const RichTextEditor: React.FC = () => {
       }
     }
   };
-  const downloadAsDoc = async () => {
-    const doc = await convertToDoc(editor);
-    saveAs(doc, 'YO THIS IS YOUR FILE.docx');
-  };
+  // const downloadAsDoc = async () => {
+  //   const doc = await convertToDoc(editor);
+  //   saveAs(doc, 'YO THIS IS YOUR FILE.docx');
+  // };
   const { leftSidebar } = useMultiSidebar();
   console.log(leftSidebar);
+
+  useEffect(() => {
+    const fetchSuggestion = async () => {
+      const code = state.value.map((node) =>
+        // @ts-expect-error - ts-migrate(7006) FIXME: Parameter 'child' implicitly has an 'any' type.
+        node.children.map((child) =>
+          // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'leaf' implicitly has an 'any' type.
+          child.children.map((leaf) => leaf.text).join('\n'),
+        ),
+      );
+      const cursorPosition = editor.selection
+        ? editor.selection.anchor.offset
+        : 0;
+    };
+    fetchSuggestion();
+  }, [state.value, editor.selection]);
 
   return (
     <ErrorBoundary
@@ -537,6 +562,11 @@ export const RichTextEditor: React.FC = () => {
                     <BiSolidZap className="w-8 h-8" />
                   </SidebarTrigger>
                 </div>
+                <Settings2 onClick={() => setIsSettingsOpen(true)} />
+                <SettingsDialog
+                  isOpen={isSettingsOpen}
+                  setIsOpen={setIsSettingsOpen}
+                />
               </Toolbar>
             </div>
 

@@ -8,15 +8,14 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider name="kon">
-      <MultiSidebarProvider>
-        <AppSidebar />
+    <MultiSidebarProvider>
+      <AppSidebar />
 
-        <main className="flex max-h-screen overflow-hidden w-full pt-5">
-          <SidebarInset>{children}</SidebarInset>
-        </main>
-        <SidebarChat />
-      </MultiSidebarProvider>
-    </SidebarProvider>
+      <main className="flex max-h-screen overflow-hidden w-full pt-5">
+        {children}
+        {/* <SidebarInset>{children}</SidebarInset> */}
+      </main>
+      <SidebarChat />
+    </MultiSidebarProvider>
   );
 }

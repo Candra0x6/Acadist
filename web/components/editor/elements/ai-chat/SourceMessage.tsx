@@ -1,25 +1,9 @@
-import { Document } from '@langchain/core/documents';
+'use client';
 import { File } from 'lucide-react';
 import Image from 'next/image';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
-const MessageSources = ({
-  sources,
-}: {
-  sources: Document<Record<string, any>>[];
-}) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const closeModal = () => {
-    setIsDialogOpen(false);
-    document.body.classList.remove('overflow-hidden-scrollable');
-  };
-
-  const openModal = () => {
-    setIsDialogOpen(true);
-    document.body.classList.add('overflow-hidden-scrollable');
-  };
-
+const MessageSources = ({ sources }: { sources: any[] }) => {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
       {sources.map((source, i) => (

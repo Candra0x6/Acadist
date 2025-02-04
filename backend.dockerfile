@@ -14,4 +14,4 @@ RUN mkdir /home/acadist/uploads
 RUN yarn install --frozen-lockfile --network-timeout 600000
 RUN yarn build
 
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]

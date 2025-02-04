@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import crypto from 'crypto';
 import { useSocket } from './useSocket';
@@ -19,6 +19,36 @@ interface WebSocketMessage {
   messageId?: string;
 }
 
+export const getSuggestions = async (chatHisory: Message[]) => {
+  const chatModel = localStorage.getItem('chatModel');
+  const chatModelProvider = localStorage.getItem('chatModelProvider');
+
+  const customOpenAIKey = localStorage.getItem('openAIApiKey');
+  const customOpenAIBaseURL = localStorage.getItem('openAIBaseURL');
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/suggestions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      chatHistory: chatHisory,
+      chatModel: {
+        provider: chatModelProvider,
+        model: chatModel,
+        ...(chatModelProvider === 'custom_openai' && {
+          customOpenAIKey,
+          customOpenAIBaseURL,
+        }),
+      },
+    }),
+  });
+
+  const data = (await res.json()) as { suggestions: string[] };
+
+  return data.suggestions;
+};
+
 export const useWebSocketMessageHandler = () => {
   const [fileIds, setFileIds] = useState<string[]>([]);
   const [isWSReady, setIsWSReady] = useState(false);
@@ -33,7 +63,10 @@ export const useWebSocketMessageHandler = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageAppeared, setMessageAppeared] = useState(false);
   const [chatHistory, setChatHistory] = useState<[string, string][]>([]);
-  const messagesRef = useRef(messages);
+  const messagesRef = useRef<Message[]>([]);
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   const sendMessage = async (message: string, messageId?: string) => {
     if (!ws || ws.readyState !== WebSocket.OPEN) {
@@ -155,20 +188,22 @@ export const useWebSocketMessageHandler = () => {
       setLoading(false);
 
       const lastMsg = messagesRef.current[messagesRef.current.length - 1];
-      //   if (
-      //     lastMsg.role === 'assistant' &&
-      //     lastMsg.sources?.length &&
-      //     !lastMsg.suggestions
-      //   ) {
-      //     const suggestions = await getSuggestions(messagesRef.current);
-      //     updateMessageSuggestions(lastMsg.messageId, suggestions);
-      //   }
+      if (
+        lastMsg.role === 'assistant' &&
+        lastMsg.sources?.length &&
+        !lastMsg.suggestions
+      ) {
+        const suggestions = await getSuggestions(messagesRef.current);
+        updateMessageSuggestions(lastMsg.messageId, suggestions);
+      }
     };
 
     const updateMessageSuggestions = (messageId: string, suggestions: any) => {
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.messageId === messageId ? { ...msg, suggestions } : msg,
+          msg.messageId === messageId
+            ? { ...msg, suggestions }
+            : { ...msg, suggestions: undefined },
         ),
       );
     };
